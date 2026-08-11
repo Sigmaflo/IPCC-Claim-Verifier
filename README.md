@@ -1,4 +1,17 @@
-# 🧭 IPCC-Navigator: 기후 과학 데이터 내비게이터
+# 🧭 IPCC-Navigator
+
+> ## 🔄 프로젝트 전환 안내 (2026-08)
+>
+> 이 프로젝트는 **"뉴스 기사가 인용한 IPCC 보고서 내용이 원문과 일치하는지
+> 자동으로 대조·검증하는 RAG 기반 사실검증 시스템"** 으로 주제를 전환했습니다.
+> 새 시스템의 스펙은 요구사항 인터뷰 후 `docs/specs/features/`에 작성됩니다.
+>
+> 아래 내용은 전환 이전의 **v1: IPCC AR6 한글 RAG 챗봇**에 대한 문서이며,
+> v1의 코드·실험 기록(IEP 문서, 노트북)은 [`legacy/`](./legacy) 폴더에 보관되어 있습니다.
+
+---
+
+## v1: IPCC AR6 RAG 챗봇 (아카이브)
 
 IPCC AR6 한글 번역본을 기반으로, 누구나 기후변화에 대해 쉽게 질문하고  
 **출처와 함께** 답변받을 수 있는 RAG 챗봇입니다.
@@ -54,7 +67,7 @@ IPCC AR6 종합보고서는 기후변화의 과학적 근거를 담은 가장 �
 
 **현재 배포 설정**: 단순 청킹 CASE 3 (1000/200) + 벡터 단독 검색 (cosine, threshold=0.40)
 
-> 실험 상세 내용은 [`proposals/`](./proposals) 폴더의 IEP 문서를 참고하세요.
+> 실험 상세 내용은 [`legacy/proposals/`](./legacy/proposals) 폴더의 IEP 문서를 참고하세요.
 
 ---
 
@@ -132,13 +145,13 @@ cd IPCC-Navigator
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-pip install -r app/backend/requirements.txt
+pip install -r legacy/app/backend/requirements.txt
 ```
 
 ### 3. 환경변수 설정
 
 ```bash
-cp .env.example .env
+cp legacy/.env.example .env
 ```
 
 `.env` 파일을 열어 실제 값 입력:
@@ -151,7 +164,7 @@ CHROMA_DIR=/path/to/your/chroma_cosine
 ### 4. 서버 실행
 
 ```bash
-cd app/backend
+cd legacy/app/backend
 uvicorn main:app --reload
 ```
 
@@ -173,6 +186,8 @@ curl -X POST http://localhost:8000/chat \
 
 ```bash
 # 빌드 (amd64 명시 필수 — Mac M4 arm64 환경 대응)
+# Dockerfile과 앱 코드가 legacy/로 이동했으므로 legacy/를 빌드 컨텍스트로 사용
+cd legacy
 docker buildx build \
   --platform linux/amd64 \
   -t ipcc-rag:local .
@@ -191,7 +206,8 @@ docker run -p 8080:8080 \
 ## ☁️ Cloud Run 재배포
 
 ```bash
-# 1. amd64로 빌드 + GCR 푸시
+# 1. amd64로 빌드 + GCR 푸시 (legacy/를 빌드 컨텍스트로 사용)
+cd legacy
 docker buildx build \
   --platform linux/amd64 \
   -t gcr.io/<PROJECT_ID>/ipcc-rag:latest \
@@ -309,21 +325,20 @@ gcloud run deploy ipcc-rag \
 
 ```
 IPCC-Navigator/
-├── app/
-│   ├── backend/
-│   │   ├── main.py          # FastAPI 앱 + 일일 200건 미들웨어
-│   │   ├── rag.py           # RAG 파이프라인 (검색 + Solar 호출)
-│   │   ├── config.py        # 설정값 (threshold, 모델명, 경로)
-│   │   ├── models.py        # Pydantic 스키마
-│   │   └── requirements.txt
-│   └── frontend/
-│       ├── app.py           # Streamlit UI (일반인/전문가 답변, 신뢰도 3지표)
-│       └── requirements.txt
-├── proposals/               # IEP 실험 문서
-├── notebooks/               # 실험 노트북
+├── CLAUDE.md                # 새 주제의 프로세스 규칙
 ├── docs/
-├── Dockerfile
-├── .env.example
+│   ├── specs/features/      # 스펙 문서 (spec 스킬 저장 위치)
+│   ├── plans/               # 계획 문서
+│   └── reports/             # 부검(post-mortem) 문서
+├── legacy/                  # v1 챗봇 산출물 보관 (상세: legacy/README.md)
+│   ├── app/
+│   │   ├── backend/         # FastAPI 앱 (main.py, rag.py, config.py, models.py)
+│   │   └── frontend/        # Streamlit UI (app.py)
+│   ├── Dockerfile
+│   ├── .env.example
+│   ├── chatbot-stack.md     # v1 확정 스택 설정값
+│   ├── proposals/           # IEP 실험 문서
+│   └── notebooks/           # 실험 노트북
 └── README.md
 ```
 
