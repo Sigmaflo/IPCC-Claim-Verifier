@@ -1,9 +1,11 @@
-# 🧭 IPCC-Navigator
+# 🔍 IPCC-Claim-Verifier
+
+뉴스 기사가 인용한 IPCC 보고서 내용이 **원문과 일치하는지 자동으로 대조·검증**하는
+RAG 기반 사실검증 시스템입니다.
 
 > ## 🔄 프로젝트 전환 안내 (2026-08)
 >
-> 이 프로젝트는 **"뉴스 기사가 인용한 IPCC 보고서 내용이 원문과 일치하는지
-> 자동으로 대조·검증하는 RAG 기반 사실검증 시스템"** 으로 주제를 전환했습니다.
+> 이 저장소는 **IPCC AR6 한글 RAG 챗봇(`IPCC-Navigator`)** 에서 위 주제로 전환했습니다.
 > 새 시스템의 스펙은 요구사항 인터뷰 후 `docs/specs/features/`에 작성됩니다.
 >
 > 아래 내용은 전환 이전의 **v1: IPCC AR6 한글 RAG 챗봇**에 대한 문서이며,
@@ -22,15 +24,17 @@ IPCC AR6 한글 번역본을 기반으로, 누구나 기후변화에 대해 쉽�
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)](https://fastapi.tiangolo.com/)
 [![Solar](https://img.shields.io/badge/LLM-Solar_Pro3-orange)](https://console.upstage.ai/)
 [![ChromaDB](https://img.shields.io/badge/VectorDB-ChromaDB-purple)](https://www.trychroma.com/)
-[![Streamlit](https://img.shields.io/badge/UI-Streamlit-red)](https://ipcc-navigator-gkrymert2vvxuwxjcdkqj7.streamlit.app/)
+[![Streamlit](https://img.shields.io/badge/UI-Streamlit-red)](https://streamlit.io/)
 
 ---
 
 ## 🌐 데모
 
-| 서비스 | URL |
-| :--- | :--- |
-| Streamlit UI | [ipcc-navigator.streamlit.app](https://ipcc-navigator-gkrymert2vvxuwxjcdkqj7.streamlit.app/) |
+> ⚠️ **v1 라이브 데모는 현재 중단된 상태입니다.**
+> 주제 전환 과정에서 앱 코드가 `legacy/app/`으로 이동했고, 저장소 이름도 변경되어
+> 기존 Streamlit Cloud 배포 연결이 끊겼습니다.
+> 되살리려면 Streamlit Cloud 앱 설정에서 메인 파일 경로를
+> `legacy/app/frontend/app.py`로 지정해야 합니다 (상세: [`legacy/README.md`](./legacy/README.md)).
 
 ---
 
@@ -139,8 +143,8 @@ Faithfulness는 생존 편향 보정값(NaN → 0점, 전체 100개 기준)을 �
 ### 2. 설치
 
 ```bash
-git clone https://github.com/Sigmaflo/IPCC-Navigator.git
-cd IPCC-Navigator
+git clone https://github.com/Sigmaflo/IPCC-Claim-Verifier.git
+cd IPCC-Claim-Verifier
 
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
@@ -324,7 +328,7 @@ gcloud run deploy ipcc-rag \
 ## 📁 프로젝트 구조
 
 ```
-IPCC-Navigator/
+IPCC-Claim-Verifier/
 ├── CLAUDE.md                # 새 주제의 프로세스 규칙
 ├── docs/
 │   ├── specs/features/      # 스펙 문서 (spec 스킬 저장 위치)
