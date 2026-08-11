@@ -1,38 +1,18 @@
 # CLAUDE.md
 
 ## 프로젝트
-IPCC AR6 한글 번역본 기반 RAG 챗봇 포트폴리오.
-"동작하는 챗봇"이 아닌 "측정된 신뢰도가 있는 챗봇"을 목표로 함.
+뉴스 기사가 인용한 IPCC 보고서 내용이 원문과 일치하는지 자동으로 대조·검증하는
+RAG 기반 사실검증 시스템.
+구 챗봇(v1) 산출물과 확정 스택 정보는 `legacy/` 참조.
 
-## 현재 단계
-Phase 3 진행 중 — 검색 품질 보완
-- IEP-1004 MinerU 파서 실험 중 (Colab)
-- IEP-2001.2 방법E cosine 재실험 완료 → 배포 반영 여부 미결정
-- Phase 1, 2 완료 (배포 URL 보유)
+## 프로세스 규칙
+- 새 기능은 interview 스킬로 요구사항이 확정되기 전에 구현을 시작하지 않는다.
+- 확정된 요구사항은 spec 스킬로 `docs/specs/features/`에 스펙 문서로 저장한다.
+- 구현이 끝나면 spec-check 스킬로 스펙과 대조 검증한다.
+- 계획 문서는 `docs/plans/`, 부검(post-mortem) 문서는 `docs/reports/`, 일반 문서는 `docs/`에 둔다.
 
-## 기술 스택
-- 임베딩: jhgan/ko-sroberta-multitask (768차원)
-- 벡터DB: ChromaDB (cosine), 컬렉션: ipcc_1001_case3_cosine_v1
-- 청킹: chunk_size=1000, overlap=200 (CASE 3), 506청크
-- SIMILARITY_THRESHOLD: 0.40 (cosine 기준, 2026-04-30 확정)
-- 배포 LLM: 업스테이지 Solar (solar-pro3)
-- 실험 LLM: llama3.1:8b (Ollama)
-- 평가: RAGAS
-- 인프라: GCP Cloud Run + Streamlit Cloud
-- 실험 환경: Google Colab T4 / Mac Mini M4
-
-## 확정된 설정값
-- ChromaDB 메타데이터 키: page (int), source (PDF 경로) — chunk_id 없음
-- similarity = 1 - cosine_distance (직접 변환, LangChain 의존 금지)
-- TOP_K: 10
-- Solar base_url: https://api.upstage.ai/v1
-- 환경변수: UPSTAGE_API_KEY
-
-## 코드 규칙
-- f-string 내 \n 사용 금지
-- Mac 로컬 실행 시 device="mps" (Colab은 "cuda", Cloud Run은 "cpu")
-- ChromaDB 컬렉션 생성 시 반드시 metadata={'hnsw:space': 'cosine'} 명시
-- similarity_search_with_relevance_scores 사용 금지 (버전별 변환 공식 불일치)
+## 스택 규칙
+(비어 있음 — 인터뷰에서 스택이 확정된 뒤 채운다)
 
 ## 커밋 규칙
 - 메시지는 한글로 작성
